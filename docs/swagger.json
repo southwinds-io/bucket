@@ -1,0 +1,80 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "HTTP operations to upload and remove packages",
+        "title": "Bucket Web API",
+        "contact": {
+            "name": "SouthWinds Tech Ltd",
+            "url": "https://www.southwinds.io/support",
+            "email": "support@southwinds.io"
+        },
+        "license": {
+            "name": "SouthWinds Tech Ltd"
+        },
+        "version": "1.0"
+    },
+    "paths": {
+        "/debian/repository/{name}": {
+            "post": {
+                "description": "Uploads a Debian package to a named debian repository",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "plain/text"
+                ],
+                "tags": [
+                    "Debian"
+                ],
+                "summary": "Uploads Debian Package",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "the name of the Debian repository where the package should be uploaded",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "the name of the repository section where the package should be uploaded",
+                        "name": "section",
+                        "in": "query"
+                    },
+                    {
+                        "type": "file",
+                        "description": "the debian package file",
+                        "name": "package-file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BasicAuth": {
+            "type": "basic"
+        }
+    }
+}

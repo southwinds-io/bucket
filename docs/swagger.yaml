@@ -1,0 +1,55 @@
+info:
+  contact:
+    email: support@southwinds.io
+    name: SouthWinds Tech Ltd
+    url: https://www.southwinds.io/support
+  description: HTTP operations to upload and remove packages
+  license:
+    name: SouthWinds Tech Ltd
+  title: Bucket Web API
+  version: "1.0"
+paths:
+  /debian/repository/{name}:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Uploads a Debian package to a named debian repository
+      parameters:
+      - description: the name of the Debian repository where the package should be
+          uploaded
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: the name of the repository section where the package should be
+          uploaded
+        in: query
+        name: section
+        type: string
+      - description: the debian package file
+        in: formData
+        name: package-file
+        required: true
+        type: file
+      produces:
+      - plain/text
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Uploads Debian Package
+      tags:
+      - Debian
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"

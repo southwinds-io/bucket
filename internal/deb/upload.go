@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 func Upload(repoName, section string, pkgBytes []byte) (errorCode int, err error) {
@@ -28,12 +27,8 @@ func Upload(repoName, section string, pkgBytes []byte) (errorCode int, err error
 	if repo == nil {
 		return http.StatusBadRequest, fmt.Errorf("invalid repository: %s\n", repoName)
 	}
-	// check that the package repoName matches the repository repoName
-	if !strings.EqualFold(meta.Package, repo.Name) {
-		return http.StatusBadRequest, fmt.Errorf("invalid package '%s' for this repository '%s'\n", meta.Package, repo.Name)
-	}
 	// works out the path where the package should be saved
-	pkgPath, err := checkPkgPath(repo.Name, repo.Distribution, section, meta.Architecture)
+	pkgPath, err := checkDebianPkgPath(repo.Name, repo.Distribution, section, meta.Architecture)
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("cannot configure package path: '%s'\n", err)
 	}

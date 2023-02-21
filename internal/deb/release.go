@@ -20,7 +20,7 @@ import (
 )
 
 func CreateRelease(repo Repository) error {
-	workingDirectory, err := getReleasePath(repo)
+	workingDirectory, err := getDebianReleasePath(repo)
 	if err != nil {
 		return err
 	}

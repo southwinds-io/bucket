@@ -1,0 +1,21 @@
+{{ template "header.html" .}}
+<section class="section">
+    <div class="container">
+        <h1 class="title">Debian</h1>
+        <h2 class="subtitle">
+            Click to navigate to one of the repositories below
+        </h2>
+        <span class="is-size-5">
+        <ul>
+            {{ $repos := .repos }}
+            {{ range $repo := $repos }}
+            <li>{{$repo.Name}} [ <a href="/debian/repositories/{{$repo.Name}}">files</a> ]
+                {{ range $section := $repo.Sections }}
+                [ <a href="/debian/repository/{{$repo.Name}}/install?section={{ $section }}">install {{ $section }}</a> ]
+                {{ end }} ] [ <a href="/debian/repository/{{$repo.Name}}/key">key</a> ]</li>
+            {{ end }}
+        </ul>
+        </span>
+    </div>
+</section>
+{{ template "footer.html" .}}

@@ -15,7 +15,7 @@ import (
 )
 
 func Delete(pkgName, distro, section, version string) (int, error) {
-	sectionPath, err := getSectionPath(pkgName, distro, section)
+	sectionPath, err := getDebianSectionPath(pkgName, distro, section)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
@@ -45,7 +45,7 @@ func Delete(pkgName, distro, section, version string) (int, error) {
 		// load Packages info
 		packages, err = newPackagesData(filepath.Join(sectionPath, arch.Name(), "Packages"))
 		arc := arch.Name()[len("binary-"):]
-		pkgPath, err = getPkgPath(pkgName, distro, section, arc)
+		pkgPath, err = getDebianPkgPath(pkgName, distro, section, arc)
 		if err != nil {
 			return http.StatusInternalServerError, err
 		}

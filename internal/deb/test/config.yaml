@@ -3,7 +3,7 @@ repositories:
   distribution: all
   architectures:
     - amd64
-    - amr64
+    - arm64
   sections:
     - stable
     - devel

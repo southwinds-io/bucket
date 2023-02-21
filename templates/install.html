@@ -1,0 +1,15 @@
+{{ template "header.html" .}}
+<section class="section">
+    <div class="container">
+        <h1 class="title">Installing the {{.repo}} repository ({{.section}})</h1>
+        <h2 class="subtitle">
+            Run the script below
+        </h2>
+        <div class="notification">
+            sudo curl -fsSL {{.url}}/debian/repository/{{.repo}}/key -o /etc/apt/trusted.gpg.d/{{.repo}}.asc \<br>
+            echo "deb {{.url}}/debian/repositories/{{.repo}} $VERSION_CODENAME {{.section}}" | sudo tee /etc/apt/sources.list.d/bucket.list \<br>
+            DEBIAN_FRONTEND=noninteractive sudo apt update<br>
+        </div>
+    </div>
+</section>
+{{ template "footer.html" .}}

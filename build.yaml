@@ -1,0 +1,5 @@
+functions:
+  - name: swagen
+    description: generates/refreshes the OpenAPI specifications for Bucket's HTTP API
+    run:
+      - swag init -d "./,./internal/handlers"
