@@ -18,7 +18,7 @@ func PubKey(c *gin.Context) {
 	cfg, err := deb.NewConfig()
 	if err != nil {
 		fmt.Println(err.Error())
-		c.Writer.WriteString(err.Error())
+		_, _ = c.Writer.WriteString(err.Error())
 		c.Status(http.StatusInternalServerError)
 		return
 	}
@@ -27,10 +27,10 @@ func PubKey(c *gin.Context) {
 	if !ok {
 		msg := fmt.Sprintf("cannot find key for repository %s, check the service configuration", pkgNameParam)
 		fmt.Println(msg)
-		c.Writer.WriteString(msg)
+		_, _ = c.Writer.WriteString(msg)
 		c.Status(http.StatusBadRequest)
 		return
 	}
-	c.Writer.WriteString(key.Public)
+	_, _ = c.Writer.WriteString(key.Public)
 	c.Status(http.StatusOK)
 }

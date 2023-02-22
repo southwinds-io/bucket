@@ -11,9 +11,9 @@ func TestMarshalConfig(t *testing.T) {
 	c := &Config{
 		Repositories: []Repository{
 			{
-				Name:         "artisan-enterprise",
-				Distribution: "all",
-				KeyRef:       "SOUTHWINDS",
+				Name:          "artisan-enterprise",
+				Distributions: "all",
+				KeyRef:        "SOUTHWINDS",
 			},
 		},
 		Keys: []Key{

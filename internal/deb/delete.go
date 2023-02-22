@@ -14,8 +14,8 @@ import (
 	"strings"
 )
 
-func Delete(pkgName, distro, section, version string) (int, error) {
-	sectionPath, err := getDebianSectionPath(pkgName, distro, section)
+func Delete(pkgName, dist, section, version string) (int, error) {
+	sectionPath, err := GetDebianSectionPath(pkgName, dist, section)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
@@ -43,9 +43,9 @@ func Delete(pkgName, distro, section, version string) (int, error) {
 			continue
 		}
 		// load Packages info
-		packages, err = newPackagesData(filepath.Join(sectionPath, arch.Name(), "Packages"))
+		packages, err = NewPackagesData(filepath.Join(sectionPath, arch.Name(), "Packages"))
 		arc := arch.Name()[len("binary-"):]
-		pkgPath, err = getDebianPkgPath(pkgName, distro, section, arc)
+		pkgPath, err = GetDebianPkgPath(pkgName, dist, section, arc)
 		if err != nil {
 			return http.StatusInternalServerError, err
 		}
@@ -89,7 +89,7 @@ func Delete(pkgName, distro, section, version string) (int, error) {
 		}
 	}
 	// update Release files
-	if err = CreateRelease(*repo); err != nil {
+	if err = CreateRelease(*repo, dist); err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("cannot update Release files: '%s'\n", err)
 	}
 	return 0, nil

@@ -9,10 +9,10 @@
         <ul>
             {{ $repos := .repos }}
             {{ range $repo := $repos }}
-            <li>{{$repo.Name}} [ <a href="/debian/repositories/{{$repo.Name}}">files</a> ]
-                {{ range $section := $repo.Sections }}
-                [ <a href="/debian/repository/{{$repo.Name}}/install?section={{ $section }}">install {{ $section }}</a> ]
-                {{ end }} ] [ <a href="/debian/repository/{{$repo.Name}}/key">key</a> ]</li>
+            <li><b>{{$repo.Name}}</b> [ {{ range $dist := $repo.Distributions }}{{ range $section := $repo.Sections }}<a href="/ui/debian/repository/{{$repo.Name}}/dist/{{ $dist }}/section/{{ $section }}">{{ $dist }}-{{ $section }}</a> {{ end }}{{ end }} ]
+                [ <a href="/debian/repository/{{$repo.Name}}/key">key</a> ]
+                [ <a href="/debian/repositories/{{$repo.Name}}/dists">files</a> ]
+            </li>
             {{ end }}
         </ul>
         </span>

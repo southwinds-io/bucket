@@ -10,9 +10,10 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
-func Upload(repoName, section string, pkgBytes []byte) (errorCode int, err error) {
+func Upload(repoName, dist, section string, pkgBytes []byte) (errorCode int, err error) {
 	// read the package metadata
 	meta, err := getPackageMeta(pkgBytes)
 	if err != nil {
@@ -27,13 +28,25 @@ func Upload(repoName, section string, pkgBytes []byte) (errorCode int, err error
 	if repo == nil {
 		return http.StatusBadRequest, fmt.Errorf("invalid repository: %s\n", repoName)
 	}
+	// check that the package distribution is supported by the repository
+	if !in(dist, repo.Distributions) {
+		return http.StatusBadRequest, fmt.Errorf("invalid distribution: %s, not allowed in repository %s\n", dist, repoName)
+	}
+	// check that the package section is supported by the repository
+	if !in(section, repo.Sections) {
+		return http.StatusBadRequest, fmt.Errorf("invalid section: %s, not allowed in repository %s\n", section, repoName)
+	}
+	// check that the package architecture is supported by the repository
+	if !in(meta.Architecture, repo.Architectures) {
+		return http.StatusBadRequest, fmt.Errorf("invalid package architecture: %s, not allowed in repository %s\n", meta.Architecture, repoName)
+	}
 	// works out the path where the package should be saved
-	pkgPath, err := checkDebianPkgPath(repo.Name, repo.Distribution, section, meta.Architecture)
+	pkgPath, err := checkDebianPkgPath(repo.Name, dist, section, meta.Architecture)
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("cannot configure package path: '%s'\n", err)
 	}
 	// now loads the packages metadata to check if the package is already in the repository
-	packages, err := newPackagesData(filepath.Join(pkgPath, "Packages"))
+	packages, err := NewPackagesData(filepath.Join(pkgPath, "Packages"))
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("cannot load packages metadata: '%s'\n", err)
 	}
@@ -64,7 +77,8 @@ func Upload(repoName, section string, pkgBytes []byte) (errorCode int, err error
 		Description:  meta.Description,
 		Filename: filepath.Join(
 			"dists",
-			repo.Distribution, section,
+			dist,
+			section,
 			fmt.Sprintf("binary-%s", meta.Architecture),
 			pkgName(repo.Name, meta.Version, meta.Release, meta.Architecture)),
 		Size:   fmt.Sprintf("%d", len(pkgBytes)),
@@ -79,8 +93,17 @@ func Upload(repoName, section string, pkgBytes []byte) (errorCode int, err error
 	if err = packages.SaveGz(filepath.Join(pkgPath, "Packages.gz")); err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("cannot save Packages.gz file: '%s'\n", err)
 	}
-	if err = CreateRelease(*repo); err != nil {
+	if err = CreateRelease(*repo, dist); err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("cannot update Release files: '%s'\n", err)
 	}
 	return 0, nil
+}
+
+func in(value string, values []string) bool {
+	for _, v := range values {
+		if strings.EqualFold(v, value) {
+			return true
+		}
+	}
+	return false
 }

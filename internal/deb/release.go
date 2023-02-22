@@ -19,8 +19,8 @@ import (
 	"time"
 )
 
-func CreateRelease(repo Repository) error {
-	workingDirectory, err := getDebianReleasePath(repo)
+func CreateRelease(repo Repository, dist string) error {
+	workingDirectory, err := getDebianReleasePath(repo.Name, dist)
 	if err != nil {
 		return err
 	}
@@ -36,11 +36,11 @@ func CreateRelease(repo Repository) error {
 	}(outFile)
 
 	currentTime := time.Now().UTC()
-	_, err = fmt.Fprintf(outFile, "Suite: %s\n", repo.Distribution)
+	_, err = fmt.Fprintf(outFile, "Suite: %s\n", dist)
 	if err != nil {
 		return fmt.Errorf("can not write file: %v", err)
 	}
-	_, err = fmt.Fprintf(outFile, "Codename: %s\n", repo.Distribution)
+	_, err = fmt.Fprintf(outFile, "Codename: %s\n", dist)
 	if err != nil {
 		return fmt.Errorf("can not write file: %v", err)
 	}

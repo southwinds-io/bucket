@@ -1,0 +1,49 @@
+{{ template "header.html" .}}
+<section class="section">
+    <div class="container">
+        <h1 class="title">{{.repo}}</h1>
+        <h2 class="subtitle">Distribution: <b>{{.dist}}</b>, Section: <b>{{.section}}</b>, Architecture: <b>{{.arc}}</b></h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th><abbr title="package">package</abbr></th>
+                <th><abbr title="version">version</abbr></th>
+                <th><abbr title="release">release</abbr></th>
+                <th><abbr title="maintainer">maintainer</abbr></th>
+                <th><abbr title="size">size</abbr></th>
+                <th><abbr title="download">download</abbr></th>
+                <th><abbr title="delete">delete</abbr></th>
+            </tr>
+            </thead>
+            <tbody>
+            {{ $repo := .repo }}
+            {{ $dist := .dist }}
+            {{ $section := .section }}
+            {{ range .packages }}
+            <tr>
+                <th>{{ .Package }}</th>
+                <td>{{ .Version }}</td>
+                <td>{{ .Release }}</td>
+                <td>{{ .Maintainer }}</td>
+                <td>{{ .Size }}</td>
+                <td class="has-text-centered">
+                    <span class="icon-text">
+                      <span class="icon">
+                          <a href="/debian/repositories/{{$repo}}/dists/{{$dist}}/{{$section}}/binary-{{.Architecture}}/{{.Package}}-{{.Version}}-{{.Release}}-{{.Architecture}}.deb"><i class="fa fa-download" aria-hidden="true"></i></a>
+                      </span>
+                    </span>
+                </td>
+                <td class="has-text-centered">
+                    <span class="icon-text">
+                      <span class="icon">
+                          <a href=""><i class="fa fa-trash" aria-hidden="true"></i></a>
+                      </span>
+                    </span>
+                </td>
+            </tr>
+            {{ end }}
+            </tbody>
+        </table>
+    </div>
+</section>
+{{ template "footer.html" .}}

@@ -39,7 +39,7 @@ func (c *Config) GetKey(ref string) (*Key, bool) {
 
 type Repository struct {
 	Name          string   `json:"name" yaml:"name"`
-	Distribution  string   `json:"distribution" yaml:"distribution"`
+	Distributions []string `json:"distributions" yaml:"distributions"`
 	Architectures []string `json:"architectures" yaml:"architectures"`
 	Sections      []string `json:"sections" yaml:"sections"`
 	KeyRef        string   `json:"key_ref" yaml:"key_ref"`

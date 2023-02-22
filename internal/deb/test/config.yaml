@@ -1,12 +1,8 @@
 repositories:
 - name: artisan
-  distribution: all
-  architectures:
-    - amd64
-    - arm64
-  sections:
-    - stable
-    - devel
+  distributions: [ "all" ]
+  architectures: [ "amd64", "arm64" ]
+  sections: [ "stable", "devel" ]
   key_ref: SOUTHWINDS
 keys:
 - ref: SOUTHWINDS

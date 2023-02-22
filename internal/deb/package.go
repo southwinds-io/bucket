@@ -29,7 +29,7 @@ func newPackagesDataFromContent(content string) *PackagesData {
 	}
 }
 
-func newPackagesData(filename string) (*PackagesData, error) {
+func NewPackagesData(filename string) (*PackagesData, error) {
 	content, err := os.ReadFile(filename)
 	if err != nil {
 		if strings.Contains(err.Error(), "no such file") {

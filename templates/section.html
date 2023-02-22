@@ -1,0 +1,16 @@
+{{ template "header.html" .}}
+<section class="section">
+    <div class="container">
+        <h1 class="title">{{ .repo }} - ({{ .section }})</h1>
+        <p>[ <a href="/ui/debian/repository/{{ .repo }}/install?section={{ .section }}">install {{ .section }}</a> ]</p>
+        <br>
+        <ul>
+        {{ $repo := .repo }}{{ $section := .section }}{{ $dist := .dist }}
+        {{ range .arcs }}
+            {{ $arc := . }}
+            <li><a href="/ui/debian/repository/{{ $repo }}/dist/{{ $dist }}/section/{{ $section }}/arc/{{ $arc.Name }}">{{$arc.Name}}</a> ({{$arc.Count}} packages)</li>
+        {{ end }}
+        </ul>
+    </div>
+</section>
+{{ template "footer.html" .}}

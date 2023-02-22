@@ -12,8 +12,8 @@ import (
 	"os"
 	_ "southwinds.dev/bucket/docs"
 	"southwinds.dev/bucket/internal/deb"
+	"southwinds.dev/bucket/internal/deb/pages"
 	"southwinds.dev/bucket/internal/handlers"
-	"southwinds.dev/bucket/internal/pages"
 )
 
 var router *gin.Engine
@@ -53,13 +53,17 @@ func initializeRoutes() {
 
 	// pages
 	router.GET("/", pages.Index)
-	router.GET("/debian/repository/:name/install", pages.Install)
+	router.GET("/ui/debian/repository/:name/install", pages.Install)
+	router.GET("/ui/debian/repository/:name/dist/:dist/section/:section", pages.Section)
+	router.GET("/ui/debian/repository/:name/dist/:dist/section/:section/arc/:arc", pages.Packages)
 
-	// debian
+	// debian api
 	router.StaticFS("/debian/repositories", http.Dir(debianPath))
-	router.StaticFS("/rpm/repositories", http.Dir(rpmPath))
-	router.POST("/debian/repository/:name", handlers.UploadPkg)
-	router.DELETE("/debian/repository/:name/distro/:distro/section/:section/version/:version", handlers.DeletePkg)
+	router.POST("/debian/repository/:name/dist/:dist", handlers.UploadPkg)
+	router.DELETE("/debian/repository/:name/dist/:distro/section/:section/version/:version", handlers.DeletePkg)
 	router.GET("/debian/repository/:name/key", handlers.PubKey)
 	router.Run(":8085")
+
+	// rpm api
+	router.StaticFS("/rpm/repositories", http.Dir(rpmPath))
 }

@@ -6,7 +6,7 @@
 
 ### Uploading a Package
 
-curl -u user:pwd -H "Content-Type: multipart/form-data" --data-binary "@./path/to/package.deb" "http(s)://**HOST:PORT**/debian/repo/**REPO-NAME**"
+curl -u user:pwd -H "Content-Type: multipart/form-data" --data-binary "@./path/to/package.deb" "http(s)://**HOST:PORT**/debian/repo/**REPO-NAME**/dist/**DIST-NAME**"
 
 Example:
 
@@ -16,7 +16,7 @@ uploads package test_arm64.deb to the artisan repository, all metadata is read f
 $ curl -u "admin:admin" \
     -H "Content-Type: multipart/form-data" \
     --data-binary "@./internal/deb/test/test_arm64.deb" \
-    "http://localhost:8085/debian/repository/artisan"
+    "http://localhost:8085/debian/repository/artisan/dist/all"
 ```
 ### Deleting a Package
 

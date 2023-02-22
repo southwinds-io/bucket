@@ -53,16 +53,16 @@ func getConfigPath() (string, error) {
 	return path, nil
 }
 
-func getDebianReleasePath(repo Repository) (path string, err error) {
+func getDebianReleasePath(repoName, dist string) (path string, err error) {
 	var root string
 	root, err = GetDebianPath()
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(root, repo.Name, "dists", repo.Distribution), nil
+	return filepath.Join(root, repoName, "dists", dist), nil
 }
 
-func getDebianSectionPath(repo, distro, section string) (path string, err error) {
+func GetDebianSectionPath(repo, distro, section string) (path string, err error) {
 	var root string
 	root, err = GetDebianPath()
 	if err != nil {
@@ -71,7 +71,7 @@ func getDebianSectionPath(repo, distro, section string) (path string, err error)
 	return filepath.Join(root, repo, "dists", distro, section), nil
 }
 
-func getDebianPkgPath(repo, distro, section, arch string) (path string, err error) {
+func GetDebianPkgPath(repo, distro, section, arch string) (path string, err error) {
 	var root string
 	root, err = GetDebianPath()
 	if err != nil {
