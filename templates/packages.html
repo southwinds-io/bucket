@@ -3,6 +3,7 @@
     <div class="container">
         <h1 class="title">{{.repo}}</h1>
         <h2 class="subtitle">Distribution: <b>{{.dist}}</b>, Section: <b>{{.section}}</b>, Architecture: <b>{{.arc}}</b></h2>
+        {{ $repo := .repo }} {{ $dist := .dist }} {{ $section := .section }} {{ range .packages }}
         <table class="table">
             <thead>
             <tr>
@@ -15,11 +16,7 @@
                 <th><abbr title="delete">delete</abbr></th>
             </tr>
             </thead>
-            <tbody>
-            {{ $repo := .repo }}
-            {{ $dist := .dist }}
-            {{ $section := .section }}
-            {{ range .packages }}
+            <tbody hx-confirm="Are you sure?" hx-target="closest tr" hx-swap="outerHTML swap:1s">
             <tr>
                 <th>{{ .Package }}</th>
                 <td>{{ .Version }}</td>
@@ -36,7 +33,9 @@
                 <td class="has-text-centered">
                     <span class="icon-text">
                       <span class="icon">
-                          <a href=""><i class="fa fa-trash" aria-hidden="true"></i></a>
+                           <button class="btn btn-danger" hx-delete="/debian/repository/{{$repo}}/dist/{{$dist}}/package/{{.Package}}/section/{{$section}}/version/{{.Version}}/release/{{.Release}}/arc/{{.Architecture}}">
+                               <i class="fa fa-trash" aria-hidden="true"></i>
+                           </button>
                       </span>
                     </span>
                 </td>

@@ -12,7 +12,7 @@ const docTemplate = `{
         "title": "{{.Title}}",
         "contact": {
             "name": "SouthWinds Tech Ltd",
-            "url": "https://www.southwinds.io/support",
+            "url": "https://www.southwinds.io",
             "email": "support@southwinds.io"
         },
         "license": {
@@ -23,7 +23,166 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/debian/repository/{name}": {
+        "/debian/repository/:name/dist/:distro/package/:package/section/:section/version/:version/release/:release/arc/:arc": {
+            "delete": {
+                "description": "Deletes a specific package from the repository",
+                "produces": [
+                    "plain/text"
+                ],
+                "tags": [
+                    "Debian"
+                ],
+                "summary": "Deletes a specific package from the repository",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "the name of the Debian repository where the package should be deleted",
+                        "name": "repository",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "the name of the Debian package to delete",
+                        "name": "package",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "the distribution of the Debian package to delete, e.g. focal",
+                        "name": "dist",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "the release number of the Debian package to delete, e.g. 20230217125026225-b410fb9bf2",
+                        "name": "release",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "the section of the Debian package to delete, e.g. stable",
+                        "name": "section",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "the version of the Debian package to delete, not a regular expression, e.g. 0.4.9",
+                        "name": "version",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "the architecture of the Debian package to delete, e.g. amd64",
+                        "name": "arc",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/debian/repository/:repository/dist/:dist/package/:package/section/:section/version/:version": {
+            "delete": {
+                "description": "Deletes all packages within specific section and version across multiple architectures",
+                "produces": [
+                    "plain/text"
+                ],
+                "tags": [
+                    "Debian"
+                ],
+                "summary": "Deletes all packages within specific section and version across multiple architectures",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "the name of the Debian repository where the package should be deleted",
+                        "name": "repository",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "the name of the Debian package to delete",
+                        "name": "package",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "the distribution of the Debian package to delete; e.g. focal",
+                        "name": "dist",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "the section of the Debian package to delete; e.g. stable",
+                        "name": "section",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "the version of the Debian package to delete, it can be a Golang regular expression for example '0\\.4\\..*' will remove all versions staring with 0.4.",
+                        "name": "version",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/debian/repository/{name}/dist/{dist}": {
             "post": {
                 "description": "Uploads a Debian package to a named debian repository",
                 "consumes": [
@@ -41,6 +200,13 @@ const docTemplate = `{
                         "type": "string",
                         "description": "the name of the Debian repository where the package should be uploaded",
                         "name": "name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "the distribution in the Debian repository where the package should be uploaded",
+                        "name": "dist",
                         "in": "path",
                         "required": true
                     },

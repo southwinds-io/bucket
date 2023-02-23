@@ -14,8 +14,8 @@ import (
 	"strings"
 )
 
-func Delete(pkgName, dist, section, version string) (int, error) {
-	sectionPath, err := GetDebianSectionPath(pkgName, dist, section)
+func DeletePackageAllArcs(repoName, pkgName, dist, section, version string) (int, error) {
+	sectionPath, err := GetDebianSectionPath(repoName, dist, section)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
@@ -24,9 +24,9 @@ func Delete(pkgName, dist, section, version string) (int, error) {
 		return http.StatusInternalServerError, fmt.Errorf("cannot read configuration file: %s\n", err)
 	}
 	// check the repository repoName has been configured
-	repo := cfg.GetRepo(pkgName)
+	repo := cfg.GetRepo(repoName)
 	if repo == nil {
-		return http.StatusBadRequest, fmt.Errorf("invalid repository: %s\n", pkgName)
+		return http.StatusBadRequest, fmt.Errorf("invalid repository: %s\n", repoName)
 	}
 	var (
 		archs    []os.DirEntry
@@ -87,6 +87,55 @@ func Delete(pkgName, dist, section, version string) (int, error) {
 		if err = packages.SaveGz(filepath.Join(pkgPath, "Packages.gz")); err != nil {
 			return http.StatusInternalServerError, fmt.Errorf("cannot save Packages.gz file: '%s'\n", err)
 		}
+	}
+	// update Release files
+	if err = CreateRelease(*repo, dist); err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("cannot update Release files: '%s'\n", err)
+	}
+	return 0, nil
+}
+
+func DeletePackage(repoName, dist, packageName, section, version, release, arc string) (int, error) {
+	sectionPath, err := GetDebianSectionPath(repoName, dist, section)
+	if err != nil {
+		return http.StatusInternalServerError, err
+	}
+	cfg, err := NewConfig()
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("cannot read configuration file: %s\n", err)
+	}
+	// check the repository repoName has been configured
+	repo := cfg.GetRepo(repoName)
+	if repo == nil {
+		return http.StatusBadRequest, fmt.Errorf("invalid repository: %s\n", pkgName)
+	}
+	var (
+		packages *PackagesData
+		pkgPath  string
+	)
+	if err != nil {
+		return http.StatusInternalServerError, err
+	}
+	// load Packages info
+	packages, err = NewPackagesData(filepath.Join(sectionPath, fmt.Sprintf("binary-%s", arc), "Packages"))
+	pkgPath, err = GetDebianPkgPath(repoName, dist, section, arc)
+	if err != nil {
+		return http.StatusInternalServerError, err
+	}
+	pkgFilename := pkgName(repoName, version, release, arc)
+	err = os.Remove(filepath.Join(pkgPath, pkgFilename))
+	if err != nil {
+		return http.StatusInternalServerError, err
+	}
+	if !packages.Remove(packageName, version) {
+		return http.StatusInternalServerError, fmt.Errorf("cannot remove package metadata, cannot find package")
+	}
+	//  regenerates Packages metadata
+	if err = packages.Save(filepath.Join(pkgPath, "Packages")); err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("cannot save Packages file: '%s'\n", err)
+	}
+	if err = packages.SaveGz(filepath.Join(pkgPath, "Packages.gz")); err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("cannot save Packages.gz file: '%s'\n", err)
 	}
 	// update Release files
 	if err = CreateRelease(*repo, dist); err != nil {

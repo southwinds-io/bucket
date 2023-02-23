@@ -2,14 +2,128 @@ info:
   contact:
     email: support@southwinds.io
     name: SouthWinds Tech Ltd
-    url: https://www.southwinds.io/support
+    url: https://www.southwinds.io
   description: HTTP operations to upload and remove packages
   license:
     name: SouthWinds Tech Ltd
   title: Bucket Web API
   version: "1.0"
 paths:
-  /debian/repository/{name}:
+  /debian/repository/:name/dist/:distro/package/:package/section/:section/version/:version/release/:release/arc/:arc:
+    delete:
+      description: Deletes a specific package from the repository
+      parameters:
+      - description: the name of the Debian repository where the package should be
+          deleted
+        in: path
+        name: repository
+        required: true
+        type: string
+      - description: the name of the Debian package to delete
+        in: path
+        name: package
+        required: true
+        type: string
+      - description: the distribution of the Debian package to delete, e.g. focal
+        in: path
+        name: dist
+        required: true
+        type: string
+      - description: the release number of the Debian package to delete, e.g. 20230217125026225-b410fb9bf2
+        in: path
+        name: release
+        required: true
+        type: string
+      - description: the section of the Debian package to delete, e.g. stable
+        in: query
+        name: section
+        type: string
+      - description: the version of the Debian package to delete, not a regular expression,
+          e.g. 0.4.9
+        in: path
+        name: version
+        type: string
+      - description: the architecture of the Debian package to delete, e.g. amd64
+        in: path
+        name: arc
+        type: string
+      produces:
+      - plain/text
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Deletes a specific package from the repository
+      tags:
+      - Debian
+  /debian/repository/:repository/dist/:dist/package/:package/section/:section/version/:version:
+    delete:
+      description: Deletes all packages within specific section and version across
+        multiple architectures
+      parameters:
+      - description: the name of the Debian repository where the package should be
+          deleted
+        in: path
+        name: repository
+        required: true
+        type: string
+      - description: the name of the Debian package to delete
+        in: path
+        name: package
+        required: true
+        type: string
+      - description: the distribution of the Debian package to delete; e.g. focal
+        in: path
+        name: dist
+        required: true
+        type: string
+      - description: the section of the Debian package to delete; e.g. stable
+        in: path
+        name: section
+        type: string
+      - description: the version of the Debian package to delete, it can be a Golang
+          regular expression for example '0\.4\..*' will remove all versions staring
+          with 0.4.
+        in: path
+        name: version
+        type: string
+      produces:
+      - plain/text
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Deletes all packages within specific section and version across multiple
+        architectures
+      tags:
+      - Debian
+  /debian/repository/{name}/dist/{dist}:
     post:
       consumes:
       - multipart/form-data
@@ -19,6 +133,12 @@ paths:
           uploaded
         in: path
         name: name
+        required: true
+        type: string
+      - description: the distribution in the Debian repository where the package should
+          be uploaded
+        in: path
+        name: dist
         required: true
         type: string
       - description: the name of the repository section where the package should be

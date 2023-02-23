@@ -16,14 +16,16 @@ import (
 	"southwinds.dev/bucket/internal/handlers"
 )
 
-var router *gin.Engine
+var (
+	router *gin.Engine
+)
 
 // @title           Bucket Web API
 // @version         1.0
 // @description     HTTP operations to upload and remove packages
 
 // @contact.name   SouthWinds Tech Ltd
-// @contact.url    https://www.southwinds.io/support
+// @contact.url    https://www.southwinds.io
 // @contact.email  support@southwinds.io
 
 // @license.name  SouthWinds Tech Ltd
@@ -60,9 +62,9 @@ func initializeRoutes() {
 	// debian api
 	router.StaticFS("/debian/repositories", http.Dir(debianPath))
 	router.POST("/debian/repository/:name/dist/:dist", handlers.UploadPkg)
-	router.DELETE("/debian/repository/:name/dist/:distro/section/:section/version/:version", handlers.DeletePkg)
+	router.DELETE("/debian/repository/:name/dist/:distro/package/:package/section/:section/version/:version", handlers.DeleteAllPkgArcs)
+	router.DELETE("/debian/repository/:name/dist/:distro/package/:package/section/:section/version/:version/release/:release/arc/:arc", handlers.DeletePkg)
 	router.GET("/debian/repository/:name/key", handlers.PubKey)
-	router.Run(":8085")
 
 	// rpm api
 	router.StaticFS("/rpm/repositories", http.Dir(rpmPath))
