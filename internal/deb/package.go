@@ -174,10 +174,8 @@ func parsePackages(content string) []*PackageData {
 			value += fmt.Sprintf("\n%s", parts[ix+1])
 		}
 		if strings.EqualFold(key, "package") {
-			if data == nil {
-				data = new(PackageData)
-				data.Package = value
-			}
+			data = new(PackageData)
+			data.Package = value
 		} else {
 			switch key {
 			case "Version":

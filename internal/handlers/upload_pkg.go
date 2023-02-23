@@ -22,25 +22,37 @@ import (
 // @Produce plain/text
 // @Param name path string true "the name of the Debian repository where the package should be uploaded"
 // @Param dist path string true "the distribution in the Debian repository where the package should be uploaded"
-// @Param section query string false "the name of the repository section where the package should be uploaded"
-// @Param package-file formData file true "the debian package file"
+// @Param section path string false "the name of the section where the package should be uploaded"
+// @Param package formData file true "the debian package file"
 // @Success 201 {string} created
 // @Failure 400 {string} Bad Request
 // @Failure 500 {string} Internal Server Error
-// @Router /debian/repository/{name}/dist/{dist} [post]
+// @Router /debian/repository/{name}/dist/{dist}/section/{section} [post]
 func UploadPkg(c *gin.Context) {
 	repoName := c.Param("name")
 	dist := c.Param("dist")
-	section := c.Query("section")
-	// if no section is provided "main" is assumed
-	if len(section) == 0 {
-		section = "main"
+	section := c.Param("section")
+	err := c.Request.ParseMultipartForm(100)
+	if err != nil {
+		err = fmt.Errorf("cannot parse multi-part form: %s\n", err)
+		fmt.Println(err)
+		c.Status(http.StatusBadRequest)
+		_, _ = c.Writer.WriteString(err.Error())
+		return
 	}
+	file, _, err := c.Request.FormFile("package")
+	if err != nil {
+		err = fmt.Errorf("cannot find package key in multi-part form: %s\n", err)
+		fmt.Println(err)
+		c.Status(http.StatusBadRequest)
+		_, _ = c.Writer.WriteString(err.Error())
+		return
+	}
+	defer file.Close()
 	// buffer the request body so that it can reuse it
 	var buf = new(bytes.Buffer)
-	_, err := io.Copy(buf, c.Request.Body)
-	if err != nil {
-		err = fmt.Errorf("cannot copy request body: %s\n", err)
+	if _, err = io.Copy(buf, file); err != nil {
+		err = fmt.Errorf("cannot copy package file to buffer: %s\n", err)
 		fmt.Println(err)
 		c.Status(http.StatusInternalServerError)
 		_, _ = c.Writer.WriteString(err.Error())

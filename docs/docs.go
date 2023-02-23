@@ -182,7 +182,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/debian/repository/{name}/dist/{dist}": {
+        "/debian/repository/{name}/dist/{dist}/section/{section}": {
             "post": {
                 "description": "Uploads a Debian package to a named debian repository",
                 "consumes": [
@@ -212,14 +212,14 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "the name of the repository section where the package should be uploaded",
+                        "description": "the name of the section where the package should be uploaded",
                         "name": "section",
-                        "in": "query"
+                        "in": "path"
                     },
                     {
                         "type": "file",
                         "description": "the debian package file",
-                        "name": "package-file",
+                        "name": "package",
                         "in": "formData",
                         "required": true
                     }

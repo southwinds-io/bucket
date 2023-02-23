@@ -61,7 +61,7 @@ func initializeRoutes() {
 
 	// debian api
 	router.StaticFS("/debian/repositories", http.Dir(debianPath))
-	router.POST("/debian/repository/:name/dist/:dist", handlers.UploadPkg)
+	router.POST("/debian/repository/:name/dist/:dist/section/:section", handlers.UploadPkg)
 	router.DELETE("/debian/repository/:name/dist/:distro/package/:package/section/:section/version/:version", handlers.DeleteAllPkgArcs)
 	router.DELETE("/debian/repository/:name/dist/:distro/package/:package/section/:section/version/:version/release/:release/arc/:arc", handlers.DeletePkg)
 	router.GET("/debian/repository/:name/key", handlers.PubKey)

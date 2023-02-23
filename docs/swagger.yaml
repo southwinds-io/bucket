@@ -123,7 +123,7 @@ paths:
         architectures
       tags:
       - Debian
-  /debian/repository/{name}/dist/{dist}:
+  /debian/repository/{name}/dist/{dist}/section/{section}:
     post:
       consumes:
       - multipart/form-data
@@ -141,14 +141,13 @@ paths:
         name: dist
         required: true
         type: string
-      - description: the name of the repository section where the package should be
-          uploaded
-        in: query
+      - description: the name of the section where the package should be uploaded
+        in: path
         name: section
         type: string
       - description: the debian package file
         in: formData
-        name: package-file
+        name: package
         required: true
         type: file
       produces:
