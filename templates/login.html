@@ -1,0 +1,32 @@
+{{ template "header.html" .}}
+<div class="block"></div>
+<div class="container">
+    <div class="columns is-centered">
+        <div class="column is-4">
+            <form method="post" action="/login-check" class="box">
+                <div class="field">
+                    <label class="label">Username</label>
+                    <div class="control has-icons-left">
+                        <input name="user" type="text" class="input" placeholder="username">
+                        <span class="icon is-small is-left">
+                            <i class="fa fa-user"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Password</label>
+                    <div class="control has-icons-left">
+                        <input name="password" type="password" class="input" placeholder="password">
+                        <span class="icon is-small is-left">
+                            <i class="fa fa-lock"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="field">
+                    <button class="button is-success">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{ template "footer.html" .}}

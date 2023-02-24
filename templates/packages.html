@@ -3,7 +3,7 @@
     <div class="container">
         <h1 class="title">{{.repo}}</h1>
         <h2 class="subtitle">Distribution: <b>{{.dist}}</b>, Section: <b>{{.section}}</b>, Architecture: <b>{{.arc}}</b></h2>
-        {{ $repo := .repo }} {{ $dist := .dist }} {{ $section := .section }}
+        {{ $repo := .repo }} {{ $dist := .dist }} {{ $section := .section }} {{ $authenticated := .authenticated }}
         <table class="table">
             <thead>
             <tr>
@@ -13,7 +13,9 @@
                 <th><abbr title="maintainer">maintainer</abbr></th>
                 <th><abbr title="size">size</abbr></th>
                 <th><abbr title="download">download</abbr></th>
+                {{ if .authenticated }}
                 <th><abbr title="delete">delete</abbr></th>
+                {{ end }}
             </tr>
             </thead>
             <tbody hx-confirm="Are you sure?" hx-target="closest tr" hx-swap="outerHTML swap:1s">
@@ -31,6 +33,7 @@
                       </span>
                     </span>
                 </td>
+                {{ if $authenticated }}
                 <td class="has-text-centered">
                     <span class="icon-text">
                       <span class="icon">
@@ -40,6 +43,7 @@
                       </span>
                     </span>
                 </td>
+                {{ end }}
             </tr>
             {{ end }}
             </tbody>

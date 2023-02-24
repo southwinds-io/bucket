@@ -50,11 +50,13 @@ func Section(c *gin.Context) {
 			Count: len(packages.Items),
 		})
 	}
+	authenticated, _ := c.Get("authenticated")
 	c.HTML(http.StatusOK, "section.html", gin.H{
-		"repo":    repo,
-		"dist":    dist,
-		"section": section,
-		"arcs":    arcSummary,
+		"repo":          repo,
+		"dist":          dist,
+		"section":       section,
+		"arcs":          arcSummary,
+		"authenticated": authenticated,
 	})
 }
 

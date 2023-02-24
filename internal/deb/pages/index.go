@@ -17,5 +17,9 @@ func Index(c *gin.Context) {
 		c.Status(http.StatusInternalServerError)
 		c.Writer.WriteString(err.Error())
 	}
-	c.HTML(http.StatusOK, "index.html", gin.H{"repos": cfg.Repositories})
+	authenticated, _ := c.Get("authenticated")
+	c.HTML(http.StatusOK, "index.html", gin.H{
+		"repos":         cfg.Repositories,
+		"authenticated": authenticated,
+	})
 }

@@ -19,11 +19,13 @@ func Packages(c *gin.Context) {
 	arc := c.Param("arc")
 	path, _ := deb.GetDebianPkgPath(repo, dist, section, arc)
 	packages, _ := deb.NewPackagesData(filepath.Join(path, "Packages"))
+	authenticated, _ := c.Get("authenticated")
 	c.HTML(http.StatusOK, "packages.html", gin.H{
-		"packages": packages.Items,
-		"dist":     dist,
-		"section":  section,
-		"arc":      arc,
-		"repo":     repo,
+		"packages":      packages.Items,
+		"dist":          dist,
+		"section":       section,
+		"arc":           arc,
+		"repo":          repo,
+		"authenticated": authenticated,
 	})
 }

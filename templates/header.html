@@ -5,19 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bucket</title>
     <link rel="stylesheet" href="/static/css/bulma.min.css">
-    <link rel="stylesheet" href="/static/css/fontawesome-free-5.15.4-web/css/all.min.css">
     <link rel="stylesheet" href="/static/css/styles.css">
-    <script src="https://unpkg.com/htmx.org@1.8.5" async></script>
+    <script defer src="https://unpkg.com/htmx.org@1.8.5"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
 </head>
 <body>
 <div id="wrapper">
 <section class="hero has-background-info-light">
     <div class="hero-body">
-        <p class="title">
-            Bucket Package Repository
-        </p>
-        <p class="subtitle">
-            by <a href="https://southwinds.io">SouthWinds Tech Ltd</a>. - <a href="/api/index.html">[Swagger API]</a>
-        </p>
+        <div class="columns">
+            <div class="column">
+                <p class="title">
+                    Bucket Package Repository
+                </p>
+                <p class="subtitle">
+                    by <a href="https://southwinds.io">SouthWinds Tech Ltd</a>.
+                </p>
+            </div>
+            <div class="column has-text-right">
+                <nav class="level">
+                    <div class="level-item has-text-centered">
+                        <div>
+                            <p class="heading">Home</p>
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <a href="/"><i class="fas fa-2x fa-home"></i></a>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="level-item has-text-centered">
+                        <div>
+                            <p class="heading">Swagger</p>
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <a href="/api/index.html"><i class="fas fa-2x fa-code"></i></a>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="level-item has-text-centered">
+                        <div>
+                            {{ if .authenticated }}
+                            <p class="heading">Logout</p>
+                            <span class="icon">
+                                <a href="/logout"><i class="fas fa-2x fa-sign-out-alt"></i></a>
+                            </span>
+                            {{ else }}
+                            <p class="heading">Login</p>
+                            <span class="icon">
+                                <a href="/login"><i class="fas fa-2x fa-sign-in-alt"></i></a>
+                            </span>
+                            {{ end }}
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
     </div>
 </section>
