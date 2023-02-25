@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"os"
 	_ "southwinds.dev/bucket/docs"
+	"southwinds.dev/bucket/internal/cfg"
 	"southwinds.dev/bucket/internal/deb"
 	"southwinds.dev/bucket/internal/deb/pages"
 	"southwinds.dev/bucket/internal/handlers"
@@ -71,29 +72,25 @@ func initializeRoutes() {
 
 	// debian api
 	router.StaticFS("/debian/repositories", http.Dir(debianPath))
-	router.POST("/debian/repository/:name/dist/:dist/section/:section", authUI, handlers.UploadPkg)
-	router.DELETE("/debian/repository/:name/dist/:distro/package/:package/section/:section/version/:version", authUI, handlers.DeleteAllPkgArcs)
-	router.DELETE("/debian/repository/:name/dist/:distro/package/:package/section/:section/version/:version/release/:release/arc/:arc", authUI, handlers.DeletePkg)
+	router.POST("/debian/repository/:name/dist/:dist/section/:section", authUI, authAPI, handlers.UploadPkg)
+	router.DELETE("/debian/repository/:name/dist/:distro/package/:package/section/:section/version/:version", authAPI, handlers.DeleteAllPkgArcs)
+	router.DELETE("/debian/repository/:name/dist/:distro/package/:package/section/:section/version/:version/release/:release/arc/:arc", authAPI, handlers.DeletePkg)
 	router.GET("/debian/repository/:name/key", handlers.PubKey)
 
 	// rpm api
 	router.StaticFS("/rpm/repositories", http.Dir(rpmPath))
 }
 
+// authUI checks session cookie and sets context flag for use in html templates
 func authUI(c *gin.Context) {
-	c.Set("authenticated", IsAuthenticated(c))
+	c.Set("authenticated", cfg.IsAuthenticated(c))
 }
 
+// authAPI authenticates with either the session cookie or Authorization header
 func authAPI(c *gin.Context) {
-	// TODO: add API case using user:pwd
-	if !IsAuthenticated(c) {
+	user, pwd, hasAuthHeader := c.Request.BasicAuth()
+	if !cfg.IsAuthenticated(c) || !(hasAuthHeader && strings.EqualFold(user, cfg.GetUsername()) && strings.EqualFold(pwd, cfg.GetPassword())) {
 		c.Status(http.StatusUnauthorized)
 		return
 	}
-}
-
-func IsAuthenticated(c *gin.Context) bool {
-	s := sessions.Default(c)
-	token := s.Get("user")
-	return token != nil && strings.EqualFold(pages.GetMD5Hash(), token.(string))
 }

@@ -3,7 +3,7 @@
 <div class="container">
     <div class="columns is-centered">
         <div class="column is-4">
-            <form method="post" action="/login-check" class="box">
+            <form hx-post="/login-check" hx-target="#message" class="box">
                 <div class="field">
                     <label class="label">Username</label>
                     <div class="control has-icons-left">
@@ -21,6 +21,9 @@
                             <i class="fa fa-lock"></i>
                         </span>
                     </div>
+                </div>
+                <div class="field" id="message">
+                    <label class="label"></label>
                 </div>
                 <div class="field">
                     <button class="button is-success">Login</button>
