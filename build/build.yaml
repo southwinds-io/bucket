@@ -11,16 +11,16 @@ functions:
      GOOS: linux
      GOARCH: amd64
     run:
-#     - garble -literals -tiny build -ldflags="-w -s" -o ${APP_NAME} -v ../
-     - go build -o ${APP_NAME} -v ../
-     - rm -rf templates/
+     - garble -literals -tiny build -ldflags="-w -s" -o ${APP_NAME} -v ../
+#     - go build -o ${APP_NAME} -v ../
+     - rm -rf templates/s
      - cp -R ../templates .
      - rm -rf static/
      - cp -R ../static .
      - docker build -t ${REPO_NAME}/${APP_NAME}:${BUILD_VERSION} --build-arg VERSION=${BUILD_VERSION} .
      - docker tag ${REPO_NAME}/${APP_NAME}:${BUILD_VERSION} ${REPO_NAME}/${APP_NAME}:latest
-#     - docker push ${REPO_NAME}/${APP_NAME}:${BUILD_VERSION}
-#     - docker push ${REPO_NAME}/${APP_NAME}:latest
+     - docker push ${REPO_NAME}/${APP_NAME}:${BUILD_VERSION}
+     - docker push ${REPO_NAME}/${APP_NAME}:latest
 
   - name: test
     description: |
