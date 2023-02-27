@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
+	"southwinds.dev/bucket/internal/cfg"
 	"southwinds.dev/bucket/internal/deb"
 )
 
@@ -17,7 +18,7 @@ func Section(c *gin.Context) {
 	repo := c.Param("name")
 	dist := c.Param("dist")
 	section := c.Param("section")
-	sectionPath, err := deb.GetDebianSectionPath(repo, dist, section)
+	sectionPath, err := cfg.GetDebianSectionPath(repo, dist, section)
 	if err != nil {
 		c.Status(http.StatusInternalServerError)
 		c.Writer.WriteString(err.Error())

@@ -15,12 +15,13 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"southwinds.dev/bucket/internal/cfg"
 	"strings"
 	"time"
 )
 
-func CreateRelease(repo Repository, dist string) error {
-	workingDirectory, err := getDebianReleasePath(repo.Name, dist)
+func CreateRelease(repo cfg.DebianRepository, dist string) error {
+	workingDirectory, err := cfg.GetDebianReleasePath(repo.Name, dist)
 	if err != nil {
 		return err
 	}
@@ -127,7 +128,7 @@ func CreateRelease(repo Repository, dist string) error {
 		return fmt.Errorf("can not write file: %v", err)
 	}
 
-	key, ok := repo.cfg.GetKey(repo.KeyRef)
+	key, ok := repo.GetConfig().GetKey(repo.KeyRef)
 	if !ok {
 		return fmt.Errorf("cannot find signing key for repository %s, check the service configuration", repo.Name)
 	}

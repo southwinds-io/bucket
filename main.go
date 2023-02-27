@@ -11,10 +11,8 @@ import (
 	"github.com/swaggo/files"       // swagger embed files
 	"github.com/swaggo/gin-swagger" // gin-swagger middleware
 	"net/http"
-	"os"
 	_ "southwinds.dev/bucket/docs"
 	"southwinds.dev/bucket/internal/cfg"
-	"southwinds.dev/bucket/internal/deb"
 	"southwinds.dev/bucket/internal/deb/pages"
 	"southwinds.dev/bucket/internal/handlers"
 	"strings"
@@ -39,8 +37,6 @@ var (
 // @externalDocs.description  OpenAPI
 // @externalDocs.url          https://swagger.io/resources/open-api/
 func main() {
-	os.Setenv("PORT", "8085")
-	os.Setenv("BUCKET_CONFIG_PATH", "internal/deb/test")
 	router = gin.Default()
 	store := cookie.NewStore([]byte("secret"))
 	store.Options(sessions.Options{MaxAge: 60 * 30}) // expire in 30 mins
@@ -51,8 +47,8 @@ func main() {
 }
 
 func initializeRoutes() {
-	debianPath, _ := deb.GetDebianPath()
-	rpmPath, _ := deb.GetRpmPath()
+	debianPath, _ := cfg.GetDebianPath()
+	rpmPath, _ := cfg.GetRpmPath()
 	router.LoadHTMLGlob("templates/*")
 	router.Static("/static", "./static")
 	router.StaticFile("/favicon.ico", "./static/favicon.ico")

@@ -9,7 +9,7 @@ import (
 
 func TestMarshalConfig(t *testing.T) {
 	c := &Config{
-		Repositories: []Repository{
+		Debian: []DebianRepository{
 			{
 				Name:          "artisan-enterprise",
 				Distributions: "all",

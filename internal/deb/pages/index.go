@@ -8,18 +8,18 @@ package pages
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"southwinds.dev/bucket/internal/deb"
+	"southwinds.dev/bucket/internal/cfg"
 )
 
 func Index(c *gin.Context) {
-	cfg, err := deb.NewConfig()
+	conf, err := cfg.NewConfig()
 	if err != nil {
 		c.Status(http.StatusInternalServerError)
 		c.Writer.WriteString(err.Error())
 	}
 	authenticated, _ := c.Get("authenticated")
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"repos":         cfg.Repositories,
+		"repos":         conf.Debian,
 		"authenticated": authenticated,
 	})
 }

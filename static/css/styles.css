@@ -1,5 +1,0 @@
-/* fade the table row out before it is swapped/removed */
-tr.htmx-swapping td {
-    opacity: 0;
-    transition: opacity 1s ease-out;
-}

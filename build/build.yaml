@@ -1,0 +1,35 @@
+---
+env:
+  REPO_NAME: registry.gitlab.com/southwinds-pub/image
+  APP_NAME: bucket
+  APP_VERSION: 1.0.0
+  BUILD_VERSION: ${APP_VERSION}-${ARTISAN_REF}
+
+functions:
+  - name: release
+    env:
+     GOOS: linux
+     GOARCH: amd64
+    run:
+#     - garble -literals -tiny build -ldflags="-w -s" -o ${APP_NAME} -v ../
+     - go build -o ${APP_NAME} -v ../
+     - rm -rf templates/
+     - cp -R ../templates .
+     - rm -rf static/
+     - cp -R ../static .
+     - docker build -t ${REPO_NAME}/${APP_NAME}:${BUILD_VERSION} --build-arg VERSION=${BUILD_VERSION} .
+     - docker tag ${REPO_NAME}/${APP_NAME}:${BUILD_VERSION} ${REPO_NAME}/${APP_NAME}:latest
+#     - docker push ${REPO_NAME}/${APP_NAME}:${BUILD_VERSION}
+#     - docker push ${REPO_NAME}/${APP_NAME}:latest
+
+  - name: test
+    description: |
+      launch a working container
+    run:
+      - docker run -itd --name bucket -p 8888:8080 ${REPO_NAME}/${APP_NAME}:latest
+
+  - name: bash
+    description: |
+      launch a container waiting to exec into for debugging purposes
+    run:
+      - docker run -itd --name bucket -p 8888:8080 ${REPO_NAME}/${APP_NAME}:latest tail -f /dev/null

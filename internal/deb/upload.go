@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"southwinds.dev/bucket/internal/cfg"
 	"strings"
 )
 
@@ -19,12 +20,12 @@ func Upload(repoName, dist, section string, pkgBytes []byte) (errorCode int, err
 	if err != nil {
 		return http.StatusBadRequest, fmt.Errorf("cannot retrieve package metadata: %s\n", err)
 	}
-	cfg, err := NewConfig()
+	conf, err := cfg.NewConfig()
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("cannot read configuration file: %s\n", err)
 	}
 	// check the repository repoName has been configured
-	repo := cfg.GetRepo(repoName)
+	repo := conf.GetRepo(repoName)
 	if repo == nil {
 		return http.StatusBadRequest, fmt.Errorf("invalid repository: %s\n", repoName)
 	}
@@ -41,7 +42,7 @@ func Upload(repoName, dist, section string, pkgBytes []byte) (errorCode int, err
 		return http.StatusBadRequest, fmt.Errorf("invalid package architecture: %s, not allowed in repository %s\n", meta.Architecture, repoName)
 	}
 	// works out the path where the package should be saved
-	pkgPath, err := checkDebianPkgPath(repo.Name, dist, section, meta.Architecture)
+	pkgPath, err := cfg.CheckDebianPkgPath(repo.Name, dist, section, meta.Architecture)
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("cannot configure package path: '%s'\n", err)
 	}
@@ -55,7 +56,7 @@ func Upload(repoName, dist, section string, pkgBytes []byte) (errorCode int, err
 		return http.StatusBadRequest, fmt.Errorf("package already exists\n")
 	}
 	// save the debian package to disk
-	err = os.WriteFile(filepath.Join(pkgPath, pkgName(repo.Name, meta.Version, meta.Release, meta.Architecture)), pkgBytes, 0755)
+	err = os.WriteFile(filepath.Join(pkgPath, cfg.DebianPkgName(repo.Name, meta.Version, meta.Release, meta.Architecture)), pkgBytes, 0755)
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("cannot persist package: '%s'\n", err)
 	}
@@ -80,7 +81,7 @@ func Upload(repoName, dist, section string, pkgBytes []byte) (errorCode int, err
 			dist,
 			section,
 			fmt.Sprintf("binary-%s", meta.Architecture),
-			pkgName(repo.Name, meta.Version, meta.Release, meta.Architecture)),
+			cfg.DebianPkgName(repo.Name, meta.Version, meta.Release, meta.Architecture)),
 		Size:   fmt.Sprintf("%d", len(pkgBytes)),
 		MD5sum: md5Sum,
 		SHA1:   sha1Sum,

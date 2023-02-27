@@ -1,6 +1,6 @@
 REPOSITORY=artisan
 DISTRIBUTION=all
-SECTION=devel
+SECTION=stable
 
 curl -u "admin:admin" \
   -H 'accept: plain/text' \

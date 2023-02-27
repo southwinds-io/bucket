@@ -11,20 +11,21 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"southwinds.dev/bucket/internal/cfg"
 	"strings"
 )
 
 func DeletePackageAllArcs(repoName, pkgName, dist, section, version string) (int, error) {
-	sectionPath, err := GetDebianSectionPath(repoName, dist, section)
+	sectionPath, err := cfg.GetDebianSectionPath(repoName, dist, section)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
-	cfg, err := NewConfig()
+	conf, err := cfg.NewConfig()
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("cannot read configuration file: %s\n", err)
 	}
 	// check the repository repoName has been configured
-	repo := cfg.GetRepo(repoName)
+	repo := conf.GetRepo(repoName)
 	if repo == nil {
 		return http.StatusBadRequest, fmt.Errorf("invalid repository: %s\n", repoName)
 	}
@@ -45,7 +46,7 @@ func DeletePackageAllArcs(repoName, pkgName, dist, section, version string) (int
 		// load Packages info
 		packages, err = NewPackagesData(filepath.Join(sectionPath, arch.Name(), "Packages"))
 		arc := arch.Name()[len("binary-"):]
-		pkgPath, err = GetDebianPkgPath(pkgName, dist, section, arc)
+		pkgPath, err = cfg.GetDebianPkgPath(pkgName, dist, section, arc)
 		if err != nil {
 			return http.StatusInternalServerError, err
 		}
@@ -96,18 +97,18 @@ func DeletePackageAllArcs(repoName, pkgName, dist, section, version string) (int
 }
 
 func DeletePackage(repoName, dist, packageName, section, version, release, arc string) (int, error) {
-	sectionPath, err := GetDebianSectionPath(repoName, dist, section)
+	sectionPath, err := cfg.GetDebianSectionPath(repoName, dist, section)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
-	cfg, err := NewConfig()
+	conf, err := cfg.NewConfig()
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("cannot read configuration file: %s\n", err)
 	}
 	// check the repository repoName has been configured
-	repo := cfg.GetRepo(repoName)
+	repo := conf.GetRepo(repoName)
 	if repo == nil {
-		return http.StatusBadRequest, fmt.Errorf("invalid repository: %s\n", pkgName)
+		return http.StatusBadRequest, fmt.Errorf("invalid repository: %s\n", repoName)
 	}
 	var (
 		packages *PackagesData
@@ -118,11 +119,11 @@ func DeletePackage(repoName, dist, packageName, section, version, release, arc s
 	}
 	// load Packages info
 	packages, err = NewPackagesData(filepath.Join(sectionPath, fmt.Sprintf("binary-%s", arc), "Packages"))
-	pkgPath, err = GetDebianPkgPath(repoName, dist, section, arc)
+	pkgPath, err = cfg.GetDebianPkgPath(repoName, dist, section, arc)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
-	pkgFilename := pkgName(repoName, version, release, arc)
+	pkgFilename := cfg.DebianPkgName(repoName, version, release, arc)
 	err = os.Remove(filepath.Join(pkgPath, pkgFilename))
 	if err != nil {
 		return http.StatusInternalServerError, err
