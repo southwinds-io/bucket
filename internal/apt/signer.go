@@ -6,7 +6,7 @@
    https://github.com/egevorkyan/flufik/blob/master/LICENSE
 */
 
-package deb
+package apt
 
 import (
 	"bytes"

@@ -1,4 +1,4 @@
-package deb
+package apt
 
 import (
 	"fmt"

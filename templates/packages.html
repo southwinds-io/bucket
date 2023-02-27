@@ -29,7 +29,7 @@
                 <td class="has-text-centered">
                     <span class="icon-text">
                       <span class="icon">
-                          <a href="/debian/repositories/{{$repo}}/dists/{{$dist}}/{{$section}}/binary-{{.Architecture}}/{{.Package}}-{{.Version}}-{{.Release}}-{{.Architecture}}.deb"><i class="fa fa-download" aria-hidden="true"></i></a>
+                          <a href="/apt/repositories/{{$repo}}/dists/{{$dist}}/{{$section}}/binary-{{.Architecture}}/{{.Package}}-{{.Version}}-{{.Release}}-{{.Architecture}}.deb"><i class="fa fa-download" aria-hidden="true"></i></a>
                       </span>
                     </span>
                 </td>
@@ -37,7 +37,7 @@
                 <td class="has-text-centered">
                     <span class="icon-text">
                       <span class="icon">
-                           <button class="btn btn-danger" hx-delete="/debian/repository/{{$repo}}/dist/{{$dist}}/package/{{.Package}}/section/{{$section}}/version/{{.Version}}/release/{{.Release}}/arc/{{.Architecture}}">
+                           <button class="btn btn-danger" hx-delete="/apt/repository/{{$repo}}/dist/{{$dist}}/package/{{.Package}}/section/{{$section}}/version/{{.Version}}/release/{{.Release}}/arc/{{.Architecture}}">
                                <i class="fa fa-trash" aria-hidden="true"></i>
                            </button>
                       </span>

@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
-	"southwinds.dev/bucket/internal/deb"
+	"southwinds.dev/bucket/internal/apt"
 )
 
 // Upload Package
@@ -27,7 +27,7 @@ import (
 // @Success 201 {string} created
 // @Failure 400 {string} Bad Request
 // @Failure 500 {string} Internal Server Error
-// @Router /debian/repository/{name}/dist/{dist}/section/{section} [post]
+// @Router /apt/repository/{name}/dist/{dist}/section/{section} [post]
 func UploadPkg(c *gin.Context) {
 	repoName := c.Param("name")
 	dist := c.Param("dist")
@@ -67,7 +67,7 @@ func UploadPkg(c *gin.Context) {
 		return
 	}
 	var errCode int
-	if errCode, err = deb.Upload(repoName, dist, section, pkgBytes); errCode > 0 {
+	if errCode, err = apt.Upload(repoName, dist, section, pkgBytes); errCode > 0 {
 		fmt.Println(err.Error())
 		c.Status(errCode)
 		_, _ = c.Writer.WriteString(err.Error())

@@ -9,8 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"path/filepath"
+	"southwinds.dev/bucket/internal/apt"
 	"southwinds.dev/bucket/internal/cfg"
-	"southwinds.dev/bucket/internal/deb"
 )
 
 func Packages(c *gin.Context) {
@@ -18,8 +18,8 @@ func Packages(c *gin.Context) {
 	dist := c.Param("dist")
 	section := c.Param("section")
 	arc := c.Param("arc")
-	path, _ := cfg.GetDebianPkgPath(repo, dist, section, arc)
-	packages, _ := deb.NewPackagesData(filepath.Join(path, "Packages"))
+	path, _ := cfg.GetAptPkgPath(repo, dist, section, arc)
+	packages, _ := apt.NewPackagesData(filepath.Join(path, "Packages"))
 	authenticated, _ := c.Get("authenticated")
 	c.HTML(http.StatusOK, "packages.html", gin.H{
 		"packages":      packages.Items,

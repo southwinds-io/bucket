@@ -23,7 +23,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/debian/repository/:name/dist/:distro/package/:package/section/:section/version/:version/release/:release/arc/:arc": {
+        "/apt/repository/:name/dist/:distro/package/:package/section/:section/version/:version/release/:release/arc/:arc": {
             "delete": {
                 "description": "Deletes a specific package from the repository",
                 "produces": [
@@ -109,7 +109,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/debian/repository/:repository/dist/:dist/package/:package/section/:section/version/:version": {
+        "/apt/repository/:repository/dist/:dist/package/:package/section/:section/version/:version": {
             "delete": {
                 "description": "Deletes all packages within specific section and version across multiple architectures",
                 "produces": [
@@ -182,7 +182,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/debian/repository/{name}/dist/{dist}/section/{section}": {
+        "/apt/repository/{name}/dist/{dist}/section/{section}": {
             "post": {
                 "description": "Uploads a Debian package to a named debian repository",
                 "consumes": [

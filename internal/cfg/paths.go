@@ -25,7 +25,7 @@ func GetDataPath() (string, error) {
 	return path, nil
 }
 
-func GetDebianPath() (string, error) {
+func GetAptPath() (string, error) {
 	path, err := GetDataPath()
 	if err != nil {
 		return path, err
@@ -33,7 +33,7 @@ func GetDebianPath() (string, error) {
 	return filepath.Join(path, "debian"), nil
 }
 
-func GetRpmPath() (string, error) {
+func GetYumPath() (string, error) {
 	path, err := GetDataPath()
 	if err != nil {
 		return path, err
@@ -53,36 +53,36 @@ func getConfigPath() (string, error) {
 	return path, nil
 }
 
-func GetDebianReleasePath(repoName, dist string) (path string, err error) {
+func GetAptReleasePath(repoName, dist string) (path string, err error) {
 	var root string
-	root, err = GetDebianPath()
+	root, err = GetAptPath()
 	if err != nil {
 		return "", err
 	}
 	return filepath.Join(root, repoName, "dists", dist), nil
 }
 
-func GetDebianSectionPath(repo, distro, section string) (path string, err error) {
+func GetAptSectionPath(repo, distro, section string) (path string, err error) {
 	var root string
-	root, err = GetDebianPath()
+	root, err = GetAptPath()
 	if err != nil {
 		return "", err
 	}
 	return filepath.Join(root, repo, "dists", distro, section), nil
 }
 
-func GetDebianPkgPath(repo, distro, section, arch string) (path string, err error) {
+func GetAptPkgPath(repo, distro, section, arch string) (path string, err error) {
 	var root string
-	root, err = GetDebianPath()
+	root, err = GetAptPath()
 	if err != nil {
 		return "", err
 	}
 	return filepath.Join(root, repo, "dists", distro, section, fmt.Sprintf("binary-%s", arch)), nil
 }
 
-func CheckDebianPkgPath(repo, distro, section, arch string) (path string, err error) {
+func CheckAptPkgPath(repo, distro, section, arch string) (path string, err error) {
 	var root string
-	root, err = GetDebianPath()
+	root, err = GetAptPath()
 	if err != nil {
 		return "", err
 	}

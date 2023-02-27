@@ -12,8 +12,8 @@ import (
 	"github.com/swaggo/gin-swagger" // gin-swagger middleware
 	"net/http"
 	_ "southwinds.dev/bucket/docs"
+	"southwinds.dev/bucket/internal/apt/pages"
 	"southwinds.dev/bucket/internal/cfg"
-	"southwinds.dev/bucket/internal/deb/pages"
 	"southwinds.dev/bucket/internal/handlers"
 	"strings"
 )
@@ -47,8 +47,8 @@ func main() {
 }
 
 func initializeRoutes() {
-	debianPath, _ := cfg.GetDebianPath()
-	rpmPath, _ := cfg.GetRpmPath()
+	debianPath, _ := cfg.GetAptPath()
+	rpmPath, _ := cfg.GetYumPath()
 	router.LoadHTMLGlob("templates/*")
 	router.Static("/static", "./static")
 	router.StaticFile("/favicon.ico", "./static/favicon.ico")
@@ -62,16 +62,16 @@ func initializeRoutes() {
 	router.GET("/login", authUI, pages.LoginForm)
 	router.POST("/login-check", pages.Login)
 	router.GET("/logout", pages.Logout)
-	router.GET("/ui/debian/repository/:name/install", authUI, pages.Install)
-	router.GET("/ui/debian/repository/:name/dist/:dist/section/:section", authUI, pages.Section)
-	router.GET("/ui/debian/repository/:name/dist/:dist/section/:section/arc/:arc", authUI, pages.Packages)
+	router.GET("/ui/apt/repository/:name/install", authUI, pages.Install)
+	router.GET("/ui/apt/repository/:name/dist/:dist/section/:section", authUI, pages.Section)
+	router.GET("/ui/apt/repository/:name/dist/:dist/section/:section/arc/:arc", authUI, pages.Packages)
 
 	// debian api
-	router.StaticFS("/debian/repositories", http.Dir(debianPath))
-	router.POST("/debian/repository/:name/dist/:dist/section/:section", authUI, authAPI, handlers.UploadPkg)
-	router.DELETE("/debian/repository/:name/dist/:distro/package/:package/section/:section/version/:version", authAPI, handlers.DeleteAllPkgArcs)
-	router.DELETE("/debian/repository/:name/dist/:distro/package/:package/section/:section/version/:version/release/:release/arc/:arc", authAPI, handlers.DeletePkg)
-	router.GET("/debian/repository/:name/key", handlers.PubKey)
+	router.StaticFS("/apt/repositories", http.Dir(debianPath))
+	router.POST("/apt/repository/:name/dist/:dist/section/:section", authUI, authAPI, handlers.UploadPkg)
+	router.DELETE("/apt/repository/:name/dist/:distro/package/:package/section/:section/version/:version", authAPI, handlers.DeleteAllPkgArcs)
+	router.DELETE("/apt/repository/:name/dist/:distro/package/:package/section/:section/version/:version/release/:release/arc/:arc", authAPI, handlers.DeletePkg)
+	router.GET("/apt/repository/:name/key", handlers.PubKey)
 
 	// rpm api
 	router.StaticFS("/rpm/repositories", http.Dir(rpmPath))

@@ -3,7 +3,7 @@
    ©2023 SouthWinds Tech Ltd
 */
 
-package deb
+package apt
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ import (
 )
 
 func DeletePackageAllArcs(repoName, pkgName, dist, section, version string) (int, error) {
-	sectionPath, err := cfg.GetDebianSectionPath(repoName, dist, section)
+	sectionPath, err := cfg.GetAptSectionPath(repoName, dist, section)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
@@ -46,7 +46,7 @@ func DeletePackageAllArcs(repoName, pkgName, dist, section, version string) (int
 		// load Packages info
 		packages, err = NewPackagesData(filepath.Join(sectionPath, arch.Name(), "Packages"))
 		arc := arch.Name()[len("binary-"):]
-		pkgPath, err = cfg.GetDebianPkgPath(pkgName, dist, section, arc)
+		pkgPath, err = cfg.GetAptPkgPath(pkgName, dist, section, arc)
 		if err != nil {
 			return http.StatusInternalServerError, err
 		}
@@ -97,7 +97,7 @@ func DeletePackageAllArcs(repoName, pkgName, dist, section, version string) (int
 }
 
 func DeletePackage(repoName, dist, packageName, section, version, release, arc string) (int, error) {
-	sectionPath, err := cfg.GetDebianSectionPath(repoName, dist, section)
+	sectionPath, err := cfg.GetAptSectionPath(repoName, dist, section)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
@@ -119,7 +119,7 @@ func DeletePackage(repoName, dist, packageName, section, version, release, arc s
 	}
 	// load Packages info
 	packages, err = NewPackagesData(filepath.Join(sectionPath, fmt.Sprintf("binary-%s", arc), "Packages"))
-	pkgPath, err = cfg.GetDebianPkgPath(repoName, dist, section, arc)
+	pkgPath, err = cfg.GetAptPkgPath(repoName, dist, section, arc)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}

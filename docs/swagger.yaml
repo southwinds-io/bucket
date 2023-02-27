@@ -9,7 +9,7 @@ info:
   title: Bucket Web API
   version: "1.0"
 paths:
-  /debian/repository/:name/dist/:distro/package/:package/section/:section/version/:version/release/:release/arc/:arc:
+  /apt/repository/:name/dist/:distro/package/:package/section/:section/version/:version/release/:release/arc/:arc:
     delete:
       description: Deletes a specific package from the repository
       parameters:
@@ -69,7 +69,7 @@ paths:
       summary: Deletes a specific package from the repository
       tags:
       - Debian
-  /debian/repository/:repository/dist/:dist/package/:package/section/:section/version/:version:
+  /apt/repository/:repository/dist/:dist/package/:package/section/:section/version/:version:
     delete:
       description: Deletes all packages within specific section and version across
         multiple architectures
@@ -123,7 +123,7 @@ paths:
         architectures
       tags:
       - Debian
-  /debian/repository/{name}/dist/{dist}/section/{section}:
+  /apt/repository/{name}/dist/{dist}/section/{section}:
     post:
       consumes:
       - multipart/form-data

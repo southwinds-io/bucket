@@ -10,15 +10,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
+	"southwinds.dev/bucket/internal/apt"
 	"southwinds.dev/bucket/internal/cfg"
-	"southwinds.dev/bucket/internal/deb"
 )
 
 func Section(c *gin.Context) {
 	repo := c.Param("name")
 	dist := c.Param("dist")
 	section := c.Param("section")
-	sectionPath, err := cfg.GetDebianSectionPath(repo, dist, section)
+	sectionPath, err := cfg.GetAptSectionPath(repo, dist, section)
 	if err != nil {
 		c.Status(http.StatusInternalServerError)
 		c.Writer.WriteString(err.Error())
@@ -26,7 +26,7 @@ func Section(c *gin.Context) {
 	}
 	var (
 		archs      []os.DirEntry
-		packages   *deb.PackagesData
+		packages   *apt.PackagesData
 		arcSummary []ArcSummary
 	)
 	archs, err = os.ReadDir(sectionPath)
@@ -40,7 +40,7 @@ func Section(c *gin.Context) {
 			continue
 		}
 		pkgPath := fmt.Sprintf("%s/%s/Packages", sectionPath, arch.Name())
-		packages, err = deb.NewPackagesData(pkgPath)
+		packages, err = apt.NewPackagesData(pkgPath)
 		if err != nil {
 			c.Status(http.StatusInternalServerError)
 			c.Writer.WriteString(err.Error())

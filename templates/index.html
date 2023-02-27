@@ -1,17 +1,14 @@
 {{ template "header.html" .}}
 <section class="section">
     <div class="container">
-        <h1 class="title">Debian</h1>
-        <h2 class="subtitle">
-            Click to navigate to one of the repositories below
-        </h2>
+        <h1 class="title">APT</h1>
         <span class="is-size-5">
         <ul>
             {{ $repos := .repos }}
             {{ range $repo := $repos }}
-            <li><b>{{$repo.Name}}</b> [ {{ range $dist := $repo.Distributions }}{{ range $section := $repo.Sections }}<a href="/ui/debian/repository/{{$repo.Name}}/dist/{{ $dist }}/section/{{ $section }}">{{ $dist }}-{{ $section }}</a> {{ end }}{{ end }} ]
-                [ <a href="/debian/repository/{{$repo.Name}}/key">key</a> ]
-                [ <a href="/debian/repositories/{{$repo.Name}}/dists">files</a> ]
+            <li><b>{{$repo.Name}}</b> [ {{ range $dist := $repo.Distributions }}{{ range $section := $repo.Sections }}<a href="/ui/apt/repository/{{$repo.Name}}/dist/{{ $dist }}/section/{{ $section }}">{{ $dist }}-{{ $section }}</a> {{ end }}{{ end }} ]
+                [ <a href="/apt/repository/{{$repo.Name}}/key">key</a> ]
+                [ <a href="/apt/repositories/{{$repo.Name}}/dists">files</a> ]
             </li>
             {{ end }}
         </ul>

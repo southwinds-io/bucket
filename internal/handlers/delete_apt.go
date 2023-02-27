@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"southwinds.dev/bucket/internal/deb"
+	"southwinds.dev/bucket/internal/apt"
 )
 
 // Delete All Architectures
@@ -26,7 +26,7 @@ import (
 // @Failure 404 {string} The package(s) to delete does not exist
 // @Failure 400 {string} The payload sent to the server is incorrect
 // @Failure 500 {string} There was an internal error trying to process the request
-// @Router /debian/repository/:repository/dist/:dist/package/:package/section/:section/version/:version [delete]
+// @Router /apt/repository/:repository/dist/:dist/package/:package/section/:section/version/:version [delete]
 func DeleteAllPkgArcs(c *gin.Context) {
 	repoParam := c.Param("repository")
 	packageParam := c.Param("package")
@@ -37,7 +37,7 @@ func DeleteAllPkgArcs(c *gin.Context) {
 		errCode int
 		err     error
 	)
-	if errCode, err = deb.DeletePackageAllArcs(repoParam, packageParam, distroParam, sectionParam, versionParam); errCode > 0 {
+	if errCode, err = apt.DeletePackageAllArcs(repoParam, packageParam, distroParam, sectionParam, versionParam); errCode > 0 {
 		fmt.Println(err.Error())
 		c.Writer.WriteString(err.Error())
 		c.Status(errCode)
@@ -62,7 +62,7 @@ func DeleteAllPkgArcs(c *gin.Context) {
 // @Failure 404 {string} The package to delete does not exist
 // @Failure 400 {string} The payload sent to the server is incorrect
 // @Failure 500 {string} There was an internal error trying to process the request
-// @Router /debian/repository/:name/dist/:distro/package/:package/section/:section/version/:version/release/:release/arc/:arc [delete]
+// @Router /apt/repository/:name/dist/:distro/package/:package/section/:section/version/:version/release/:release/arc/:arc [delete]
 func DeletePkg(c *gin.Context) {
 	repoNameParam := c.Param("name")
 	pkgNameParam := c.Param("package")
@@ -75,7 +75,7 @@ func DeletePkg(c *gin.Context) {
 		errCode int
 		err     error
 	)
-	if errCode, err = deb.DeletePackage(repoNameParam, distroParam, pkgNameParam, sectionParam, versionParam, releaseParam, arcParam); errCode > 0 {
+	if errCode, err = apt.DeletePackage(repoNameParam, distroParam, pkgNameParam, sectionParam, versionParam, releaseParam, arcParam); errCode > 0 {
 		fmt.Println(err.Error())
 		c.Writer.WriteString(err.Error())
 		c.Status(errCode)

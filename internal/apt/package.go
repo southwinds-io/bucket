@@ -3,7 +3,7 @@
    ©2023 SouthWinds Tech Ltd
 */
 
-package deb
+package apt
 
 import (
 	"bytes"

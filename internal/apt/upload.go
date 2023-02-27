@@ -3,7 +3,7 @@
    ©2023 SouthWinds Tech Ltd
 */
 
-package deb
+package apt
 
 import (
 	"fmt"
@@ -42,7 +42,7 @@ func Upload(repoName, dist, section string, pkgBytes []byte) (errorCode int, err
 		return http.StatusBadRequest, fmt.Errorf("invalid package architecture: %s, not allowed in repository %s\n", meta.Architecture, repoName)
 	}
 	// works out the path where the package should be saved
-	pkgPath, err := cfg.CheckDebianPkgPath(repo.Name, dist, section, meta.Architecture)
+	pkgPath, err := cfg.CheckAptPkgPath(repo.Name, dist, section, meta.Architecture)
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("cannot configure package path: '%s'\n", err)
 	}

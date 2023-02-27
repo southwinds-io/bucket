@@ -6,8 +6,8 @@
             Run the script below
         </h2>
         <div class="notification">
-            sudo curl -fsSL {{.url}}/debian/repository/{{.repo}}/key -o /etc/apt/trusted.gpg.d/{{.repo}}.asc \<br>
-            echo "deb {{.url}}/debian/repositories/{{.repo}} $VERSION_CODENAME {{.section}}" | sudo tee /etc/apt/sources.list.d/bucket.list \<br>
+            sudo curl -fsSL {{.url}}/apt/repository/{{.repo}}/key -o /etc/apt/trusted.gpg.d/{{.repo}}.asc \<br>
+            echo "deb {{.url}}/apt/repositories/{{.repo}} $VERSION_CODENAME {{.section}}" | sudo tee /etc/apt/sources.list.d/bucket.list \<br>
             DEBIAN_FRONTEND=noninteractive sudo apt update<br>
         </div>
     </div>

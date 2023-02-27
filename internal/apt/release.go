@@ -3,7 +3,7 @@
    ©2023 SouthWinds Tech Ltd
 */
 
-package deb
+package apt
 
 import (
 	"crypto/md5"
@@ -21,7 +21,7 @@ import (
 )
 
 func CreateRelease(repo cfg.DebianRepository, dist string) error {
-	workingDirectory, err := cfg.GetDebianReleasePath(repo.Name, dist)
+	workingDirectory, err := cfg.GetAptReleasePath(repo.Name, dist)
 	if err != nil {
 		return err
 	}
