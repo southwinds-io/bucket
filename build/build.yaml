@@ -1,26 +1,36 @@
 ---
+# NOTE: this script requires setting up the RELEASE variable either with -i option or in a parent build file
 env:
-  REPO_NAME: registry.gitlab.com/southwinds-pub/image
+  REPO_NAME: registry.southwinds.io
   APP_NAME: bucket
-  APP_VERSION: 1.0.0
-  BUILD_VERSION: ${APP_VERSION}-${ARTISAN_REF}
+  VERSION: ${RELEASE}-${ARTISAN_REF}
 
 functions:
-  - name: release
+  - name: build
+    run:
+      - $(build-linux-arm64)
+      - $(build-linux-amd64)
+      - cp -R ../templates .
+      - cp -R ../static .
+      - docker buildx build --load --platform linux/arm64 -t ${REPO_NAME}/play/${APP_NAME}:${RELEASE}-arm64 --build-arg VERSION=${VERSION} .
+      - docker buildx build --load --platform linux/amd64 -t ${REPO_NAME}/play/${APP_NAME}:${RELEASE}-amd64 --build-arg VERSION=${VERSION} .
+      - rm -rf ./templates
+      - rm -rf ./static
+      - rm -rf ./linux
+
+  - name: build-linux-amd64
     env:
      GOOS: linux
      GOARCH: amd64
     run:
-     - garble -literals -tiny build -ldflags="-w -s" -o ${APP_NAME} -v ../
-#     - go build -o ${APP_NAME} -v ../
-     - rm -rf templates/s
-     - cp -R ../templates .
-     - rm -rf static/
-     - cp -R ../static .
-     - docker build -t ${REPO_NAME}/${APP_NAME}:${BUILD_VERSION} --build-arg VERSION=${BUILD_VERSION} .
-     - docker tag ${REPO_NAME}/${APP_NAME}:${BUILD_VERSION} ${REPO_NAME}/${APP_NAME}:latest
-     - docker push ${REPO_NAME}/${APP_NAME}:${BUILD_VERSION}
-     - docker push ${REPO_NAME}/${APP_NAME}:latest
+     - go build -trimpath -ldflags="-s -w" -o ${GOOS}/${GOARCH}/${APP_NAME} ../
+
+  - name: build-linux-arm64
+    env:
+      GOOS: linux
+      GOARCH: arm64
+    run:
+      - go build -trimpath -ldflags="-s -w" -o ${GOOS}/${GOARCH}/${APP_NAME} ../
 
   - name: test
     description: |
